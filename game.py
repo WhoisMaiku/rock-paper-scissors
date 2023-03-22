@@ -40,7 +40,7 @@ def determine_winner(user_input, cpu_input):
 def replay_game():
   while True:
     play_again = input("Do you want to play again? Enter Y/N: ")
-    if play_again.upper() not in ("Y", "N"):
+    if play_again.lower() not in ("y", "n"):
       print("Please select a valid option.")
     else:
       break
