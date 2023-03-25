@@ -39,11 +39,12 @@ def determine_winner(user_input, cpu_input):
     "lizardspock": ("Lizard poisons Spock"),
     "spockscissors": ("Spock smashes Scissors"),
     "spockrock": ("Spock vaporises Rock"),
-    "tie": ("There is no winner, the game is a tie!"),
+    "tie": ("The game is a tie!"),
   }
 
   if user_input == cpu_input:
     msg_display = "tie"
+    winner = "There is no winner"
   elif cpu_input in win_logic[user_input]:
     msg_display = user_input + cpu_input
     winner = "You win!"
