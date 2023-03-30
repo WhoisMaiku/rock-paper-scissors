@@ -42,6 +42,11 @@ def determine_winner(user_input, cpu_input):
     "tie": ("The game is a tie!"),
   }
 
+  # This secion checks the logic of the entire program as follows:
+  # If the user and the computer chose the same option, the game is a tie.
+  # If the computers option is a value within the key for the players option, then the player wins.
+  # Otherwise the computer wins.
+  # The values are then concatinated together with the format "winning_option+losing_option" to display the correct outcome message
   if user_input == cpu_input:
     msg_display = "tie"
     winner = "There is no winner"
