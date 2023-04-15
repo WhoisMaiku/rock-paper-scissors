@@ -14,36 +14,20 @@ def random_selector(pos_options):
   # Select the computer's choice from predetermined possible options
   return random.choice(pos_options)
 
-def determine_winner(user_input, cpu_input):
-  # Dictionary containing the winning conditions within the first value pair, followed by the win messages in the second value pair
-  win_logic = {
-    "rock": (("scissors", "lizard"), ("Rock crushes Scissors", "Rock crushes Lizard")),
-    "paper": (("rock", "spock"), ("Paper covers Rock", "Paper disproves Spock")),
-    "scissors": (("paper", "lizard"), ("Scissors cuts Paper", "Scissors decapitates Lizard")),
-    "lizard": (("paper", "spock"), ("Lizard eats Paper", "Lizard poisons Spock")),
-    "spock": (("scissors", "rock"), ("Spock smashes Scissors", "Spock vaporises Rock")),
-    "tie": ("The game is a tie!"),
-  }
-
+def determine_winner(user_input, cpu_input, win_logic):
   # This secion checks the logic of the entire program as follows:
   # If the user and the computer chose the same option, the game is a tie.
-  # If the computers option is a value within the first value pair of the key for the players option, then the player wins.
+  # If the computers option is a value within the key of the users option, the user wins
   # Otherwise the computer wins.
   if user_input == cpu_input:
-    msg_winner = win_logic["tie"]
+    msg_winner = "The game is a tie!"
     winner = "There is no winner"
-  elif cpu_input in win_logic[user_input][0]:
-    if cpu_input == win_logic[user_input][0][0]:
-      msg_winner = win_logic[user_input][1][0]
-    else:
-      msg_winner = win_logic[user_input][1][1]
+  elif cpu_input in win_logic[user_input]:
     winner = "You win!"
+    msg_winner = win_logic[user_input][cpu_input]
   else:
-    if user_input == win_logic[cpu_input][0][0]:
-      msg_winner = win_logic[cpu_input][1][0]
-    else:
-      msg_winner = win_logic[cpu_input][1][1]
     winner = "The cpu wins!"
+    msg_winner = win_logic[cpu_input][user_input]
   return msg_winner, winner
     
 def print_winner(user_choice, cpu_choice, win_msg, winner):
@@ -61,18 +45,27 @@ def replay_game():
     else:
       return play_again
 
-def game():
+def rpsls_game():
   # Main Program
   pos_options = ["rock", "paper", "scissors", "lizard", "spock"]
+  
+  # This nested dictionary contains each game option as a key, followed by each win condition as a nested key and the value being the win message.
+  win_logic = {
+    "rock": {"scissors": "Rock crushes Scissors", "lizard": "Rock crushes Lizard"},
+    "paper": {"rock": "Paper covers Rock", "spock": "Paper disproves Spock"},
+    "scissors": {"paper": "Scissors cuts Paper", "lizard": "Scissors decapitates Lizard"},
+    "lizard": {"paper": "Lizard eats Paper", "spock": "Lizard poisons Spock"},
+    "spock": {"scissors": "Spock smashes Scissors", "rock": "Spock vaporises Rock"},
+  }
 
   while True:
     user_choice = collect_input(pos_options)
     cpu_choice = random_selector(pos_options)
-    msg_win, winner = determine_winner(user_choice, cpu_choice)
+    msg_win, winner = determine_winner(user_choice, cpu_choice, win_logic)
     print_winner(user_choice, cpu_choice, msg_win, winner)
     play_again = replay_game() 
     if play_again in ("n", "no"):
       print("Thank you for playing!")
       break
 
-game()
+rpsls_game()
