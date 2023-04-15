@@ -1,86 +1,77 @@
 import random
 
-def collect_input(pos_choice1, pos_choice2, pos_choice3, pos_choice4, pos_choice5):
-  # Collect & Validate user input versus 5 predetermined posibilities.
+def collect_input(pos_choice):
+  # Collect & Validate user input via text input from a predetermined list.
   while True:
-    print("Please select one of the following options:", pos_choice1, pos_choice2, pos_choice3, pos_choice4, pos_choice5)
-    user_choice = input()
-    if user_choice.lower() not in (pos_choice1, pos_choice2, pos_choice3, pos_choice4, pos_choice5):
+    print("Please select one of the following options: " + ", ".join(pos_choice))
+    user_choice = input().lower()
+    if user_choice not in (pos_choice):
       print("Error: Please enter a valid option")
     else:
-      break
-  return user_choice
+      return user_choice
 
-def random_selector(choice1, choice2, choice3, choice4, choice5):
-  # Select the computer's choice from five possible options
-  possible_options = [choice1, choice2, choice3, choice4, choice5]
-  cpu_choice = random.choice(possible_options)
-  return cpu_choice
+def random_selector(pos_options):
+  # Select the computer's choice from predetermined possible options
+  return random.choice(pos_options)
 
 def determine_winner(user_input, cpu_input):
-  # Determine who the winner is through a dictionary search
+  # Dictionary containing the winning conditions within the first value pair, followed by the win messages in the second value pair
   win_logic = {
-    "rock": ("lizard", "scissors"),
-    "paper": ("rock", "spock"),
-    "scissors": ("paper", "lizard"),
-    "lizard": ("paper", "spock"),
-    "spock": ("scissors", "rock"),
-  }
-
-  # Show a custom win message through contatinating inputs together
-  win_msg = {
-    "rocklizard": ("Rock crushes Lizard"),
-    "rockscissors": ("Rock crushes Scissors"),
-    "paperrock": ("Paper covers Rock"),
-    "paperspock": ("Paper disproves Spock"),
-    "scissorspaper": ("Scissors cuts Paper"),
-    "scissorslizard": ("Scissors decapitates Lizard"),
-    "lizardpaper": ("Lizard eats Paper"),
-    "lizardspock": ("Lizard poisons Spock"),
-    "spockscissors": ("Spock smashes Scissors"),
-    "spockrock": ("Spock vaporises Rock"),
+    "rock": (("scissors", "lizard"), ("Rock crushes Scissors", "Rock crushes Lizard")),
+    "paper": (("rock", "spock"), ("Paper covers Rock", "Paper disproves Spock")),
+    "scissors": (("paper", "lizard"), ("Scissors cuts Paper", "Scissors decapitates Lizard")),
+    "lizard": (("paper", "spock"), ("Lizard eats Paper", "Lizard poisons Spock")),
+    "spock": (("scissors", "rock"), ("Spock smashes Scissors", "Spock vaporises Rock")),
     "tie": ("The game is a tie!"),
   }
 
   # This secion checks the logic of the entire program as follows:
   # If the user and the computer chose the same option, the game is a tie.
-  # If the computers option is a value within the key for the players option, then the player wins.
+  # If the computers option is a value within the first value pair of the key for the players option, then the player wins.
   # Otherwise the computer wins.
-  # The values are then concatinated together with the format "winning_option+losing_option" to display the correct outcome message
   if user_input == cpu_input:
-    msg_display = "tie"
+    msg_winner = win_logic["tie"]
     winner = "There is no winner"
-  elif cpu_input in win_logic[user_input]:
-    msg_display = user_input + cpu_input
+  elif cpu_input in win_logic[user_input][0]:
+    if cpu_input == win_logic[user_input][0][0]:
+      msg_winner = win_logic[user_input][1][0]
+    else:
+      msg_winner = win_logic[user_input][1][1]
     winner = "You win!"
   else:
-    msg_display = cpu_input + user_input
+    if user_input == win_logic[cpu_input][0][0]:
+      msg_winner = win_logic[cpu_input][1][0]
+    else:
+      msg_winner = win_logic[cpu_input][1][1]
     winner = "The cpu wins!"
+  return msg_winner, winner
     
+def print_winner(user_choice, cpu_choice, win_msg, winner):
   # Print the outcome of the game
-  print("You have chosen "+ user_input + " and the cpu has chosen " + cpu_input)
-  print(win_msg[msg_display])
+  print("You have chosen", user_choice, "and the cpu has chosen", cpu_choice)
+  print(win_msg)
   print(winner)
 
 def replay_game():
+  # This function is responsible for determining if the user would like to play again.
   while True:
-    play_again = input("Do you want to play again? Enter Y/N: ")
-    if play_again.lower() not in ("y", "n"):
+    play_again = input("Do you want to play again? Enter Y/N: ").lower()
+    if play_again not in ("y", "n", "yes", "no"):
       print("Please select a valid option.")
     else:
-      break
-  return play_again
+      return play_again
 
 def game():
   # Main Program
+  pos_options = ["rock", "paper", "scissors", "lizard", "spock"]
+
   while True:
-    user_choice = collect_input("rock", "paper", "scissors", "lizard", "spock")
-    cpu_choice = random_selector("rock", "paper", "scissors", "lizard", "spock")
-    determine_winner(user_choice, cpu_choice)
+    user_choice = collect_input(pos_options)
+    cpu_choice = random_selector(pos_options)
+    msg_win, winner = determine_winner(user_choice, cpu_choice)
+    print_winner(user_choice, cpu_choice, msg_win, winner)
     play_again = replay_game() 
-    if play_again.lower() == "y":
-      continue
-    else:
+    if play_again in ("n", "no"):
       print("Thank you for playing!")
       break
 
