@@ -1,4 +1,5 @@
 import random
+import os
     
 class Game:
 
@@ -11,27 +12,52 @@ class Game:
         self.win_msg = ""
         self.play_again = ""
     
-    def add_win_condition(self, winner, loser, message):
-        # Adds an extra win condition to an already existing option
-        self.win_conditions[str(winner)][str(loser)] = message 
-    
-    def add_new_win_condition(self, winner, loser, message):
-        # Adds a new option and win condition
-        self.options.append(winner)
-        self.win_conditions[str(winner)] = {str(loser): message}
-
     def generate_options_list(self):
         # Generates a new list of game options from scratch
         print("Please write down the possible options you would like to add to the game:")
-        print("Type End when complete")
+        print("Type 'end' when complete")
         while True:
             new_option = input().lower()
             if new_option == "end":
                 break
             else:
-                self.options.append(new_option)
+                self.add_option(new_option)
+    
+    def generate_win_conditions(self):
+        # Generates win conditions for a list of game options
+        for val in range(len(self.options)):
+            while True:
+                os.system("clear")
+                print(f"What does {self.options[val]} beat?")
+                loser = input().lower()
+                print(f"Please enter the win message for when {self.options[val]} beats {loser}:")
+                win_message = input().lower()
+                self.add_win_condition(self.options[val], loser, win_message)
+                print(f"Does {self.options[val]} beat anything else? [Y/N]")
+                add_more = input().lower()
+                if add_more in ("n", "no"):
+                    break
+
+    def add_option(self, option):
+        # Add a new option to the game
+        self.options.append(option)
+
+    def del_option(self, option):
+        # Delete an existing option from the game
+        self.options.remove(option)
+
+    def add_win_condition(self, winner, loser, message):
+        # Adds a new win condition. If the option does not already exist it will add it.
+        if winner in self.win_conditions and winner in self.options:
+            self.win_conditions[str(winner)][str(loser)] = message 
+        elif winner in self.options:
+            self.win_conditions[str(winner)] = {str(loser): message}
+        else:
+            self.add_option(winner)
+            self.win_conditions[str(winner)] = {str(loser): message}  
 
     def del_win_condition(self, winner):
+        # Deletes a win condition from the win logic map
         del self.win_conditions[winner]
     
     def collect_input(self):
@@ -67,6 +93,7 @@ class Game:
        
     def print_winner(self):
         # Print the outcome of the game
+        os.system("clear")
         print("You have chosen", self.user_choice, "and the cpu has chosen", self.cpu_choice)
         print(self.win_msg)
         print(self.winner)
@@ -82,6 +109,7 @@ class Game:
 
     def play_game(self):
         while True:
+            os.system("clear")
             self.collect_input()
             self.random_selector()
             self.determine_winner()
@@ -93,11 +121,13 @@ class Game:
 
 # Inputs for a simple Rock Paper Scissors Game
 rps_options = ["rock", "paper", "scissors"]
+
 win_logic = {
     "rock": {"scissors": "Rock crushes Scissors"},
     "paper": {"rock": "Paper covers Rock"},
     "scissors": {"paper": "Scissors cuts Paper"},
 }
+
 # Creates RPS game objects
 rps = Game(rps_options, win_logic)
 
@@ -105,9 +135,9 @@ rps = Game(rps_options, win_logic)
 rps.add_win_condition("rock", "lizard", "Rock crushes Lizard")
 rps.add_win_condition("paper", "spock", "Paper disproves Spock")
 rps.add_win_condition("scissors", "lizard", "Scissors decapitates Lizard")
-rps.add_new_win_condition("lizard", "paper", "Lizard eats Paper")
+rps.add_win_condition("lizard", "paper", "Lizard eats Paper")
 rps.add_win_condition("lizard", "spock", "Lizard poisons Spock")
-rps.add_new_win_condition("spock", "scissors", "Spock smashes Scissors")
+rps.add_win_condition("spock", "scissors", "Spock smashes Scissors")
 rps.add_win_condition("spock", "rock", "Spock vaporises Rock")
 
 # Playing RPSLS using the original RPS object
