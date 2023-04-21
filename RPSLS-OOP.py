@@ -6,11 +6,6 @@ class Game:
     def __init__(self, options = [], win_conditions = {}):
         self.options = options
         self.win_conditions = win_conditions
-        self.user_choice = ""
-        self.cpu_choice = ""
-        self.winner = ""
-        self.win_msg = ""
-        self.play_again = ""
     
     def generate_options_list(self):
         # Generates a new list of game options from scratch
