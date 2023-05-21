@@ -1,0 +1,10 @@
+rock, scissors, Rock crushes Scissors
+paper, rock, Paper covers Rock
+scissors, paper, Scissors cuts Paper
+rock, lizard, Rock crushes Lizard
+paper, spock, Paper disproves Spock
+scissors, lizard, Scissors decapitates Lizard
+lizard, paper, Lizard eats Paper
+spock, scissors, Spock smashes Scissors
+lizard, spock, Lizard poisons Spock
+spock, rock, Spock vaporises Rock
